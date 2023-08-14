@@ -1,15 +1,9 @@
 import { createStore } from 'vuex'
 
 export default createStore({
-  state: {
-    dialog: false,
-  },
+  state: {},
   getters: {},
-  mutations: {
-    setDialog(state, value) {
-      state.dialog = value;
-    },
-  },
+  mutations: {},
   actions: {},
   modules: {},
 });

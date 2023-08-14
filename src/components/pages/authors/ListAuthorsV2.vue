@@ -11,7 +11,7 @@
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
 
-        <AuthorForm :dialog="dialog" @cambioVariable="actualizarVariablePadre" />
+        <AuthorForm ref="editRef" :desserts="desserts" />
 
         <DialogDelete />
       </v-toolbar>
@@ -21,7 +21,7 @@
         color="teal-darken-1"
         size="small"
         class="me-2"
-        @click="editItem(item.raw)"
+        @click="callEditItem(item.raw)"
       >
         mdi-pencil
       </v-icon>
@@ -34,103 +34,42 @@
     </template>
   </v-data-table>
 </template>
-<script>
+
+<script setup>
+import { ref,toRefs, defineProps } from 'vue';
 import axios from "axios";
 import DialogDelete from "./DialogDelete.vue";
-import AuthorForm from "../../forms/AuthorForm.vue"
-import { mapState } from 'vuex';
+import AuthorForm from '@/components/forms/AuthorForm.vue';
 
+const props = defineProps({
+  apiUrl: String,
+  title: String,
+  tableHeaders: Object,
+});
 
-export default {
-  components: {
-    DialogDelete,
-    AuthorForm,
-  },
-  props: {
-    apiUrl: String,
-    title: String,
-    tableHeaders: Array,
-  },
-  data: () => ({
-    dialog: false,
-    desserts: [],
-    editedIndex: -1,
-    editedItem: {
-      name: "",
-      lastName: "",
-      email: "",
-    },
-    defaultItem: {
-      name: "",
-      lastName: "",
-      email: "",
-    },
-  }),
+const { apiUrl, tableHeaders, title } = toRefs(props);
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
-    ...mapState(['dialog']),
-  },
+const desserts = ref([]);
 
-  created() {
-    this.initialize();
-  },
-
-  methods: {
-    async initialize() {
-      try {
-        const response = await axios.get(this.apiUrl);
-        this.desserts = response.data; // Asignar los datos de la API a la propiedad 'desserts'
-        console.log(this.desserts);
-      } catch (error) {
-        console.error("Error fetching data from API:", error);
-      }
-    },
-
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    },
-
-    deleteItem(item) {
-      this.$swal("Hello Vue world!!!");
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-    },
-
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1);
-      this.closeDelete();
-    },
-
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-      this.close();
-    },
-
-  },
+const initialize = async () => {
+  try {
+    const response = await axios.get(apiUrl.value);
+    desserts.value = response.data;
+    console.log(desserts.value);
+  } catch (error) {
+    console.error("Error fetching data from API:", error);
+  }
 };
+
+const editRef = ref(null);
+const callEditItem = (item) => {
+  editRef.value.editItem(item);
+};
+
+const deleteItem = (item) => {
+  // Handle delete logic here
+  // For example: Show a confirmation dialog before deleting
+};
+
+initialize();
 </script>

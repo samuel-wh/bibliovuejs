@@ -34,12 +34,12 @@
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
                   v-model="state.lastname"
-                  :error-messages="v$.name.$errors.map((e) => e.$message)"
+                  :error-messages="v$.lastname.$errors.map((e) => e.$message)"
                   :counter="10"
                   label="Lastname"
                   required
                   @input="v$.lastname.$touch"
-                  @blur="v$.name.$touch"
+                  @blur="v$.lastname.$touch"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" sm="6" md="4">
@@ -61,7 +61,7 @@
           <v-btn color="blue-darken-1" variant="elevated" @click="clear">
             Cancel
           </v-btn>
-          <v-btn color="blue-darken-1" variant="elevated" @click="v$.$validate">
+          <v-btn color="blue-darken-1" variant="elevated" @click="save">
             Save
           </v-btn>
           <v-spacer></v-spacer>
@@ -70,24 +70,17 @@
     </form>
   </v-dialog>
 </template>
+
 <script setup>
-import { reactive, watch, computed, ref, defineProps } from "vue";
+import { ref, toRefs, computed, reactive, watch } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
-import { useStore } from 'vuex';
-
-const store = useStore();
 
 const props = defineProps({
-  dialog: Boolean,
+  desserts: Array,
 });
-
-const dialog = computed({
-  get: () => props.dialog,
-  set: (value) => {
-    store.commit('setDialog', value); // Actualiza el estado de dialog en Vuex
-  },
-});
+const { desserts } = toRefs(props);
+const dialog = ref(false);
 
 const editedIndex = ref(-1);
 
@@ -117,14 +110,25 @@ watch(dialog, (val) => {
 
 /** COMPUTEDS */
 const formTitle = computed(() => {
-  return editedIndex === -1 ? 'New Item' : 'Edit Item'
+  return editedIndex.value === -1 ? 'New Item' : 'Edit Item'
 })
 
-function clear() {
+const clear = () => {
   v$.value.$reset();
   for (const [key, value] of Object.entries(initialState)) {
     state[key] = value;
   }
   dialog.value = false;
+  editedIndex.value = -1
 }
+
+const save = () => { };
+
+const editItem = (item) => {
+  editedIndex.value = desserts.value.indexOf(item);
+  // editedItem.value = { ...item };
+  dialog.value = true;
+};
+
+defineExpose({ editItem });
 </script>
