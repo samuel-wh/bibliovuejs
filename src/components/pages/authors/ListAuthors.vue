@@ -1,174 +1,70 @@
 <template>
-  <v-data-table :headers="tableHeaders" :items="desserts" :sort-by="[{ key: 'calories', order: 'asc' }]" class="elevation-3">
+  <v-data-table
+    :headers="tableHeaders"
+    :items="desserts"
+    :sort-by="[{ key: 'id', order: 'asc' }]"
+    class="elevation-3"
+  >
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>{{ title }}</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ props }">
-            <v-btn  color="indigo-darken-1" dark class="mb-2" v-bind="props" variant="elevated">
-              New Item
-            </v-btn>
-          </template>
-          <v-card class='p-3'>
-            <v-card-title>
-              <span class="text-h5"> Agregar Autor</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.lastName" label="Apellido"></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field v-model="editedItem.email" label="Email"></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="elevated" @click="close">
-                Cancel
-              </v-btn>
-              <v-btn color="blue-darken-1" variant="elevated" @click="save">
-                Save
-              </v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog class='text-center' v-model="dialogDelete" max-width="600px">
-          <v-card class='p-3'>
-            <v-card-title class="text-h5">¿Está seguro de que desea eliminar este elemento?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue-darken-1" variant="elevated" @click="closeDelete">Cancelar</v-btn>
-              <v-btn color="blue-darken-1" variant="elevated" @click="deleteItemConfirm">Si, Estoy Seguro</v-btn>
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <AuthorForm ref="formRef" :desserts="desserts" :api-url="apiUrl" />
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
-      <v-icon color='teal-darken-1' size="small" class="me-2" @click="editItem(item.raw)">
+      <v-icon
+        color="teal-darken-1"
+        size="small"
+        class="me-2"
+        @click="callEditItem(item.raw)"
+      >
         mdi-pencil
       </v-icon>
-      <v-icon color='red-darken-1' size="small" @click="deleteItem(item.raw)">
+      <v-icon color="red-darken-1" size="small" @click="callDeleteItem(item.raw)">
         mdi-delete
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize">
-        Reset
-      </v-btn>
+      <v-btn color="primary" @click="initialize"> Reset </v-btn>
     </template>
   </v-data-table>
 </template>
-<script>
-import axios from 'axios';
 
-export default {
-  props: {
-    apiUrl: String,
-    title: String,
-    tableHeaders: Array,
-  },
-  data: () => ({
-    dialog: false,
-    dialogDelete: false,
-    desserts: [],
-    editedIndex: -1,
-    editedItem: {
-      name: '',
-      lastName: '',
-      email: '',
-    },
-    defaultItem: {
-      name: '',
-      lastName: '',
-      email: '',
-    },
-  }),
+<script setup>
+import { ref, toRefs, defineProps } from "vue";
+import axios from "axios";
+import AuthorForm from "@/components/forms/AuthorForm.vue";
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    },
-  },
+const props = defineProps({
+  apiUrl: String,
+  title: String,
+  tableHeaders: Object,
+});
 
-  watch: {
-    dialog(val) {
-      val || this.close()
-    },
-    dialogDelete(val) {
-      val || this.closeDelete()
-    },
-  },
+const { apiUrl, tableHeaders, title } = toRefs(props);
 
-  created() {
-    this.initialize()
-  },
+const desserts = ref([]);
 
-  methods: {
-    async initialize() {
-      try {
-        const response = await axios.get(this.apiUrl);
-        this.desserts = response.data; // Asignar los datos de la API a la propiedad 'desserts'
-        console.log(this.desserts);
-      } catch (error) {
-        console.error('Error fetching data from API:', error);
-      }
-    },
+const initialize = async () => {
+  try {
+    const response = await axios.get(apiUrl.value);
+    desserts.value = response.data;
+    console.log(desserts.value);
+  } catch (error) {
+    console.error("Error fetching data from API:", error);
+  }
+};
 
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
+const formRef = ref(null);
+const callEditItem = (item) => {
+  formRef.value.editItem(item);
+};
 
-    deleteItem(item) {
-      this.$swal('Hello Vue world!!!');
-      this.editedIndex = this.desserts.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-    },
+const callDeleteItem = (item) => {
+  formRef.value.deleteItem(item);
+};
 
-    deleteItemConfirm() {
-      this.desserts.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
-
-    close() {
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-
-    closeDelete() {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem)
-      } else {
-        this.desserts.push(this.editedItem)
-      }
-      this.close()
-    },
-  },
-}
+initialize();
 </script>
