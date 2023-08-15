@@ -1,30 +1,35 @@
 <template>
-  <ListAuthors :title="title" :table-headers="tableHeaders" :api-url="apiUrl"/>
+  <ListPublishers :apiUrl="apiUrl" :title="title" :tableHeaders="tableHeaders"/>
 </template>
 
 <script>
 
 // Components
-import ListAuthors from '../components/pages/authors/ListAuthors.vue';
+import ListPublishers from '@/components/pages/ListPublishers.vue';
 
 export default {
   name: 'AuthorsView',
 
   components: {
-    ListAuthors,
+    ListPublishers,
   },
   data: () => ({
-    apiUrl: "http://localhost:3003/api/v1/authors",
-    title: "Lista de Autores",
+    apiUrl: "http://localhost:3003/api/v1/publishers",
+    title: "Lista de Editoriales",
     tableHeaders: [
       {
-        title: 'Nombre',
+        title: 'ID',
         align: 'start',
         sortable: false,
-        key: 'name',
+        key: 'id',
       },
-      { title: 'Apellido', key: 'lastName' },
-      { title: 'Email', key: 'email' },
+      { title: 'Nombre', key: 'name' },
+      { title: 'Direccion', key: 'address' },
+      { title: 'Ciudad', key: 'city' },
+      { title: 'Estado', key: 'state' },
+      { title: 'Pais', key: 'country' },
+      { title: 'Pagina Web', key: 'website' },
+      { title: 'Fecha de creacion', key: 'createdAt' },
       { title: 'Actions', key: 'actions', sortable: false },
     ],
 

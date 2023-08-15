@@ -5,7 +5,7 @@
 <script>
 
 // Components
-import ListAuthors from '@/components/pages/authors/ListAuthors.vue';
+import ListAuthors from '@/components/pages/ListAuthors.vue';
 
 export default {
   name: 'AuthorsView',
