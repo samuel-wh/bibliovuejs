@@ -34,8 +34,9 @@
 
 <script setup>
 import { ref, toRefs, defineProps } from "vue";
-import axios from "axios";
 import AuthorForm from "@/components/forms/AuthorForm.vue";
+import { getAuthors } from "@/services/authorsApi";
+import { formatDate } from "@/utils/dateUtils"
 
 const props = defineProps({
   apiUrl: String,
@@ -48,13 +49,11 @@ const { apiUrl, tableHeaders, title } = toRefs(props);
 const desserts = ref([]);
 
 const initialize = async () => {
-  try {
-    const response = await axios.get(apiUrl.value);
-    desserts.value = response.data;
-    console.log(desserts.value);
-  } catch (error) {
-    console.error("Error fetching data from API:", error);
-  }
+  const authors = await getAuthors();
+  authors.forEach(author => {
+    author.createdAt = formatDate(author.createdAt);
+  });
+  desserts.value = authors;
 };
 
 const formRef = ref(null);

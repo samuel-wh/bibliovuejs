@@ -10,7 +10,7 @@
         <v-toolbar-title>{{ title }}</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <PublisherForm ref="formRef" :desserts="desserts" :api-url="apiUrl" />
+        <publisher-form ref="formRef" :desserts="desserts" :api-url="apiUrl" />
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
@@ -34,8 +34,9 @@
 
 <script setup>
 import { ref, toRefs, defineProps } from "vue";
-import axios from "axios";
 import PublisherForm from "../forms/PublisherForm.vue";
+import { getPublishers } from "@/services/publishersApi"
+import { formatDate } from "@/utils/dateUtils"
 
 const props = defineProps({
   apiUrl: String,
@@ -48,13 +49,11 @@ const { apiUrl, tableHeaders, title } = toRefs(props);
 const desserts = ref([]);
 
 const initialize = async () => {
-  try {
-    const response = await axios.get(apiUrl.value);
-    desserts.value = response.data;
-    console.log(desserts.value);
-  } catch (error) {
-    console.error("Error fetching data from API:", error);
-  }
+  const publishers = await getPublishers();
+  publishers.forEach(publisher => {
+    publisher.createdAt = formatDate(publisher.createdAt);
+  });
+  desserts.value = publishers;
 };
 
 const formRef = ref(null);

@@ -104,7 +104,7 @@
 <script setup>
 import { ref, toRefs, computed, reactive, watch } from "vue";
 import { useVuelidate } from "@vuelidate/core";
-import { city, required } from "@vuelidate/validators";
+import { required } from "@vuelidate/validators";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -231,6 +231,7 @@ const deleteItem = async (item) => {
       // Realizar la solicitud DELETE utilizando Axios
       const response = await axios.delete(`${apiUrl.value}/${item.id}`);
       if (response.status === 204) {
+        console.log(editedIndex.value);
         desserts.value.splice(editedIndex.value, 1);
       }
       // Mostrar mensaje de éxito

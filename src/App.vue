@@ -8,9 +8,9 @@
         <router-view />
       </v-container>
     </v-main>
-    <v-footer class="text-center d-flex flex-column">
+    <!-- <v-footer class="text-center d-flex flex-column">
       <SiteFooter />
-    </v-footer>
+    </v-footer> -->
   </v-app>
 </template>
 
@@ -18,3 +18,6 @@
 import SiteFooter from "./components/layout/SiteFooter.vue";
 import SiteNabvar from "./components/layout/SiteNabvar.vue";
 </script>
+
+<style>
+</style>

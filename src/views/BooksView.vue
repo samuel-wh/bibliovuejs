@@ -1,9 +1,35 @@
 <template>
-  <ListBooks />
+  <list-books :apiUrl="apiUrl" :title="title" :tableHeaders="tableHeaders"/>
 </template>
 
-<script setup>
+<script>
 
 // Components
 import ListBooks from '@/components/pages/ListBooks.vue';
+
+export default {
+  name: 'BooksView',
+
+  components: {
+    ListBooks,
+  },
+  data: () => ({
+    apiUrl: "http://localhost:3003/api/v1/books",
+    title: "Lista de Libros",
+    tableHeaders: [
+      {
+        title: 'ID',
+        align: 'start',
+        sortable: false,
+        key: 'id',
+      },
+      { title: 'Titulo', key: 'title' },
+      { title: 'Editorial', key: 'publisher.name' },
+      { title: 'Autores', key: 'books_authors' },
+      { title: 'Fecha de Publicacion', key: 'pubDate'},
+      { title: 'Actions', key: 'actions', sortable: false },
+    ],
+
+  }),
+}
 </script>
