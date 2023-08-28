@@ -1,5 +1,5 @@
 <template>
-  <ListPublishers :apiUrl="apiUrl" :title="title" :tableHeaders="tableHeaders"/>
+  <ListPublishers :title="title" :tableHeaders="tableHeaders"/>
 </template>
 
 <script>
@@ -14,7 +14,6 @@ export default {
     ListPublishers,
   },
   data: () => ({
-    apiUrl: "http://localhost:3003/api/v1/publishers",
     title: "Lista de Editoriales",
     tableHeaders: [
       {

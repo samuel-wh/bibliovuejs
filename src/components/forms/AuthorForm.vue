@@ -29,7 +29,8 @@
                   required
                   @input="v$.name.$touch()"
                   @blur="v$.name.$touch()"
-                ></v-text-field>
+                  variant="outlined"
+                />
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
@@ -40,7 +41,8 @@
                   required
                   @input="v$.lastName.$touch()"
                   @blur="v$.lastName.$touch()"
-                ></v-text-field>
+                  variant="outlined"
+                />
               </v-col>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field
@@ -50,21 +52,22 @@
                   required
                   @input="v$.email.$touch()"
                   @blur="v$.email.$touch()"
-                ></v-text-field>
+                  variant="outlined"
+                />
               </v-col>
             </v-row>
           </v-container>
         </v-card-text>
 
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-btn color="red-lighten-1" variant="elevated" @click="clear">
-            Cancel
+            Cancelar
           </v-btn>
           <v-btn color="green-lighten-1" variant="elevated" @click="save">
-            Save
+            Guardar
           </v-btn>
-          <v-spacer></v-spacer>
+          <v-spacer />
         </v-card-actions>
       </v-card>
     </form>
@@ -80,7 +83,6 @@ import { postAuthors, patchAuthors, deleteAuthors } from "@/services/authorsApi"
 /*----------------------- Variables ----------------------*/
 const props = defineProps({
   desserts: Array,
-  apiUrl: String,
 });
 
 const { desserts } = toRefs(props);

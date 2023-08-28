@@ -10,7 +10,7 @@
         <v-toolbar-title>{{ title }}</v-toolbar-title>
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
-        <AuthorForm ref="formRef" :desserts="desserts" :api-url="apiUrl" />
+        <author-form ref="formRef" :desserts="desserts" />
       </v-toolbar>
     </template>
     <template v-slot:item.actions="{ item }">
@@ -39,12 +39,11 @@ import { getAuthors } from "@/services/authorsApi";
 import { formatDate } from "@/utils/dateUtils"
 
 const props = defineProps({
-  apiUrl: String,
   title: String,
   tableHeaders: Object,
 });
 
-const { apiUrl, tableHeaders, title } = toRefs(props);
+const { tableHeaders, title } = toRefs(props);
 
 const desserts = ref([]);
 const editedIndex = ref(-1);

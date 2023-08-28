@@ -18,7 +18,9 @@ export const getBooks = async () => {
     console.error(error);
     Swal.fire({
       title: "Error",
-      text: error.response.data.message,
+      text: error.response
+        ? error.response.data.message
+        : error,
       icon: "error",
     });
   }
@@ -45,7 +47,9 @@ export const postBooks = async (desserts, state) => {
     console.error(error);
     Swal.fire({
       title: "Error",
-      text: error.response.data.message,
+      text: error.response
+        ? error.response.data.message
+        : error,
       icon: "error",
     });
   }
@@ -81,7 +85,9 @@ export const patchBooks = async (desserts, state) => {
     console.error("Error making PATCH request:", error);
     Swal.fire({
       title: "Error",
-      text: error.response.data.message,
+      text: error.response
+        ? error.response.data.message
+        : error,
       icon: "error",
     });
   }

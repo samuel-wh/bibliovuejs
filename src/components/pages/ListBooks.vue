@@ -8,6 +8,7 @@
     <template v-slot:top>
       <v-toolbar flat>
         <v-toolbar-title>{{ title }}</v-toolbar-title>
+
         <v-divider class="mx-4" inset vertical></v-divider>
         <v-spacer></v-spacer>
         <book-form ref="formRef" :desserts="desserts" />
@@ -42,11 +43,9 @@
 import { ref, toRefs, defineProps } from "vue";
 import BookForm from "../forms/BookForm.vue";
 import { getBooks } from "@/services/booksApi"
-import { getPublishers } from "@/services/publishersApi"
 import { formatDate } from "@/utils/dateUtils"
 
 const props = defineProps({
-  apiUrl: String,
   title: String,
   tableHeaders: Object,
 });

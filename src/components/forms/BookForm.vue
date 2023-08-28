@@ -61,9 +61,9 @@
                   label="Autores"
                   required
                   :items="authorsList"
-                  variant="outlined"
                   @input="v$.authorIds.$touch()"
                   @blur="v$.authorIds.$touch()"
+                  variant="outlined"
                   multiple
                   chips
                 />

@@ -18,7 +18,9 @@ export const getAuthors = async () => {
     console.error(error);
     Swal.fire({
       title: "Error",
-      text: error.response.data.message,
+      text: error.response
+        ? error.response.data.message
+        : error,
       icon: "error",
     });
   }
@@ -43,7 +45,9 @@ export const postAuthors = async (desserts, state) => {
     console.error(error);
     Swal.fire({
       title: "Error",
-      text: error.response.data.message,
+      text: error.response
+        ? error.response.data.message
+        : error,
       icon: "error",
     });
   }
@@ -76,7 +80,9 @@ export const patchAuthors = async (desserts, state) => {
     console.error(error);
     Swal.fire({
       title: "Error",
-      text: error.response.data.message,
+      text: error.response
+        ? error.response.data.message
+        : error,
       icon: "error",
     });
   }

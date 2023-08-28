@@ -1,5 +1,5 @@
 <template>
-  <list-books :apiUrl="apiUrl" :title="title" :tableHeaders="tableHeaders"/>
+  <list-books :title="title" :tableHeaders="tableHeaders"/>
 </template>
 
 <script>
@@ -14,7 +14,6 @@ export default {
     ListBooks,
   },
   data: () => ({
-    apiUrl: "http://localhost:3003/api/v1/books",
     title: "Lista de Libros",
     tableHeaders: [
       {

@@ -1,5 +1,5 @@
 <template>
-  <ListAuthors :apiUrl="apiUrl" :title="title" :tableHeaders="tableHeaders"/>
+  <ListAuthors :title="title" :tableHeaders="tableHeaders"/>
 </template>
 
 <script>
@@ -14,7 +14,6 @@ export default {
     ListAuthors,
   },
   data: () => ({
-    apiUrl: "http://localhost:3003/api/v1/authors",
     title: "Lista de Autores",
     tableHeaders: [
       {
