@@ -125,7 +125,9 @@ export const deleteBooks = async (desserts, item, editedIndex) => {
     console.error(error);
     Swal.fire({
       title: "Error",
-      text: error.response.data.message,
+      text: error.response
+        ? error.response.data.message
+        : error,
       icon: "error",
     });
   }

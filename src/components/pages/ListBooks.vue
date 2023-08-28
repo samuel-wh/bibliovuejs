@@ -51,7 +51,7 @@ const props = defineProps({
   tableHeaders: Object,
 });
 
-const { apiUrl, tableHeaders, title } = toRefs(props);
+const { tableHeaders, title } = toRefs(props);
 
 const desserts = ref([]);
 const editedIndex = ref(-1);
@@ -71,7 +71,6 @@ const callEditItem = (item) => {
 };
 
 const callDeleteItem = (item) => {
-  console.log(editedIndex);
   formRef.value.deleteBooks(desserts, item, editedIndex);
 };
 initialize();

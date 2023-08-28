@@ -47,6 +47,7 @@ const props = defineProps({
 const { apiUrl, tableHeaders, title } = toRefs(props);
 
 const desserts = ref([]);
+const editedIndex = ref(-1);
 
 const initialize = async () => {
   const authors = await getAuthors();
@@ -62,7 +63,7 @@ const callEditItem = (item) => {
 };
 
 const callDeleteItem = (item) => {
-  formRef.value.deleteItem(item);
+  formRef.value.deleteAuthors(desserts, item, editedIndex);
 };
 
 initialize();

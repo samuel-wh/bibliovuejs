@@ -75,16 +75,15 @@
 import { ref, toRefs, computed, reactive, watch } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
-import axios from "axios";
-import Swal from "sweetalert2";
+import { postAuthors, patchAuthors, deleteAuthors } from "@/services/authorsApi";
 
-/* VARIABLES */
+/*----------------------- Variables ----------------------*/
 const props = defineProps({
   desserts: Array,
   apiUrl: String,
 });
 
-const { desserts, apiUrl } = toRefs(props);
+const { desserts } = toRefs(props);
 const dialog = ref(false);
 
 const editedIndex = ref(-1);
@@ -106,20 +105,24 @@ const rules = {
 };
 
 const v$ = useVuelidate(rules, state);
-/* END VARIABLES */
+/*--------------------- END Variables --------------------*/
 
-/* WATCHERS */
+
+/*----------------------- Watchers -----------------------*/
 watch(dialog, (val) => {
   val || clear();
 });
-/*END WATCHERS */
+/*--------------------- END Watchers --------------------*/
 
-/* COMPUTEDS */
+
+/*----------------------- Computeds ---------------------*/
 const formTitle = computed(() => {
   return editedIndex.value === -1 ? "Nuevo Autor" : "Editar Autor";
 });
-/* END COMPUTEDS */
+/*--------------------- END Computeds --------------------*/
 
+
+/*----------------------- Functions ---------------------*/
 const clear = () => {
   v$.value.$reset();
   for (const [key, value] of Object.entries(initialState)) {
@@ -129,42 +132,11 @@ const clear = () => {
   editedIndex.value = -1;
 };
 
-const patchItem = async () => {
-  try {
-    const { id, createdAt, ...dataToUpdate } = state;
-    const response = await axios.patch(
-      `${apiUrl.value}/${state.id}`,
-      dataToUpdate
-    );
-    if (response.status === 200) {
-      // Encuentra el índice del elemento modificado en la matriz desserts
-      const index = desserts.value.findIndex((item) => item.id === state.id);
-      if (index !== -1) {
-        // Actualiza el elemento modificado en la matriz desserts
-        desserts.value[index] = { ...response.data };
-      }
-    }
-  } catch (error) {
-    console.error("Error making PATCH request:", error);
-  }
-};
-
-const postItem = async () => {
-  try {
-    const response = await axios.post(apiUrl.value, state);
-    if (response.status === 201) {
-      desserts.value.push({ ...response.data });
-    }
-  } catch (error) {
-    console.error("Error making POST request::", error);
-  }
-};
-
 const save = () => {
   if (editedIndex.value > -1) {
-    patchItem();
+    patchAuthors(desserts, state);
   } else {
-    postItem();
+    postAuthors(desserts, state);
   }
   clear();
 };
@@ -175,43 +147,8 @@ const editItem = (item) => {
   Object.assign(state, item);
   dialog.value = true;
 };
+/*----------------------- END Funcitions ---------------------*/
 
-const deleteItem = async (item) => {
-  try {
-    const result = await Swal.fire({
-      title: "¿Está seguro?",
-      text: "Esta acción no se puede deshacer.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "¡Sí, bórralo!",
-      cancelButtonText: "Cancelar",
-      showLoaderOnConfirm: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      allowOutsideClick: () => !Swal.isLoading(),
-    });
 
-    if (result.isConfirmed) {
-      // Realizar la solicitud DELETE utilizando Axios
-      const response = await axios.delete(`${apiUrl.value}/${item.id}`);
-      if (response.status === 204) {
-        desserts.value.splice(editedIndex.value, 1);
-      }
-      // Mostrar mensaje de éxito
-      Swal.fire({
-        title: "Registro eliminado",
-        icon: "success",
-      });
-    }
-  } catch (error) {
-    console.error(error);
-    Swal.fire({
-      title: "Error",
-      text: "An error occurred while deleting the item.",
-      icon: "error",
-    });
-  }
-};
-
-defineExpose({ editItem, deleteItem });
+defineExpose({ editItem, deleteAuthors });
 </script>

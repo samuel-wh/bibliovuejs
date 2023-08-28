@@ -131,17 +131,20 @@ const pubList = ref([]);
 const authorsList = ref([]);
 /*--------------------- END Variables --------------------*/
 
+
 /*----------------------- Watchers -----------------------*/
 watch(dialog, (val) => {
   val || clear();
 });
 /*--------------------- END Watchers --------------------*/
 
+
 /*----------------------- Computeds ---------------------*/
 const formTitle = computed(() => {
   return editedIndex.value === -1 ? "Nuevo Libro" : "Editar Libro";
 });
 /*--------------------- END Computeds --------------------*/
+
 
 /*----------------------- Functions ---------------------*/
 const clear = () => {
